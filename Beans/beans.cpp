@@ -63,10 +63,12 @@ class Beans {
 
                 if (scale > 1) {
                     Bean beanL = Bean(beans[i].pos.x, beans[i].pos.y, scale-1);
+                    beanL.rotationSpeed = beans[i].rotationSpeed*3.0f;
                     beanL.velocity = (Vector2){ 0.1f*RandomRange(-100, -10), beans[i].velocity.y };
                     beans.push_back(beanL);
 
                     Bean beanR = Bean(beans[i].pos.x, beans[i].pos.y, scale-1);
+                    beanR.rotationSpeed = beans[i].rotationSpeed*3.0f;
                     beanR.velocity = (Vector2){ 0.1f*RandomRange(10, 100), beans[i].velocity.y };
                     beans.push_back(beanR); //Sometimes this causes exception, idk why, pls help
                 }
@@ -94,12 +96,29 @@ class Beans {
             for (int i = 0; i < (int)beans.size(); i++)
             {
                 Vector2 position = (Vector2){ (float)(beans[i].pos.x - texture.width*beans[i].scale/2), (float)(beans[i].pos.y - texture.height*beans[i].scale/2) };
+                
+                float s = sin(beans[i].rotation*DEG2RAD);
+                float c = cos(beans[i].rotation*DEG2RAD);
+
+                position.x -= beans[i].pos.x;
+                position.y -= beans[i].pos.y;
+
+                float xnew = position.x * c - position.y * s;
+                float ynew = position.x * s + position.y * c;
+
+                position.x = xnew + beans[i].pos.x;
+                position.y = ynew + beans[i].pos.y;
+
+                //float radius = texture.width*beans[i].scale/2;
+                //DrawCircle(position.x, position.y, 3, DARKBLUE);
+                //DrawCircleLines(beans[i].pos.x, beans[i].pos.y, radius, RED);
+                //DrawText(TextFormat("Bean: %.3f", beans[0].rotation), 10, 70, 25, GREEN);
                 //Fix beans[i].rotation, because it rotates from position not from center
 
                 if (beans[i].damaged) {
-                    DrawTextureEx(damaged, position, 0.0f, beans[i].scale, WHITE);
+                    DrawTextureEx(damaged, position, beans[i].rotation, beans[i].scale, WHITE);
                 } else {
-                    DrawTextureEx(texture, position, 0.0f, beans[i].scale, WHITE);
+                    DrawTextureEx(texture, position, beans[i].rotation, beans[i].scale, WHITE);
                 }                
             }
         }

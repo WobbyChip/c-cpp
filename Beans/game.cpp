@@ -75,6 +75,10 @@ class Game {
 
         void Update()
         {
+            framesCounter++;
+            if (framesCounter < (targetFrames/framesSpeed)) { return; }
+            framesCounter = 0;
+
             switch (scene)
             {
                 case SceneMenu:
@@ -93,10 +97,6 @@ class Game {
                     break;
                 case SceneGame:
                     UpdateMusicStream(music);
-
-                    framesCounter++;
-                    if (framesCounter < (targetFrames/framesSpeed)) { return; }
-                    framesCounter = 0;
 
                     if (IsKeyDown(KEY_SPACE))
                     {
