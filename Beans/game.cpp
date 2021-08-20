@@ -12,10 +12,10 @@ class Game {
         Sound end;
         Music music;
 
-        Ship ship = Ship();
         Stars stars = Stars(50, 15);
-        Bullets bullets = Bullets();
-        Beans beans = Beans();
+        Ship ship;
+        Bullets bullets;
+        Beans beans;
 
         int framesCounter = 0;
         int targetFrames;
