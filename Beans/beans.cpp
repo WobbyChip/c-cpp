@@ -10,16 +10,18 @@ class Bean {
         Vector2 velocity;
         bool damaged;
         int scale;
+        float radius;
         float health;
         float rotation;
         float rotationSpeed;
 
-        Bean(int x, int y, int size)
+        Bean(int x, int y, int size, Texture2D* texture)
         {
             pos = (Vector2){ (float)x, (float)y };
             velocity = (Vector2){ 0.0f, 0.1f*(float)RandomRange(10, 30) };
             damaged = false;
             scale = size;
+            radius = (((*texture).width+(*texture).height)/2)*scale/2;
             health = 100.0f*size;
             rotation = 0.0f;
             rotationSpeed = 0.05f*RandomRange(-10, 10);
@@ -48,8 +50,13 @@ class Beans {
             if (GetTime() < time) { return; }
             time = GetTime()+0.1f*RandomRange(0, 10);
             int scale = RandomRange(1, 3);
-            Bean bean = Bean(RandomRange(0, GetScreenWidth()), -(texture.height*scale/2), scale);
+            Bean bean = Bean(RandomRange(0, GetScreenWidth()), -(texture.height*scale/2), scale, &texture);
             beans.push_back(bean);
+        }
+
+        bool CollideRect(int i, Rectangle rect)
+        {
+            return CheckCollisionCircleRec(beans[i].pos, beans[i].radius, rect);
         }
 
         int DamageBean(int i, int damage)
@@ -62,12 +69,12 @@ class Beans {
                 int scale = beans[i].scale;
 
                 if (scale > 1) {
-                    Bean beanL = Bean(beans[i].pos.x, beans[i].pos.y, scale-1);
+                    Bean beanL = Bean(beans[i].pos.x, beans[i].pos.y, scale-1, &texture);
                     beanL.rotationSpeed = beans[i].rotationSpeed*3.0f;
                     beanL.velocity = (Vector2){ 0.1f*RandomRange(-100, -10), beans[i].velocity.y };
                     beans.push_back(beanL);
 
-                    Bean beanR = Bean(beans[i].pos.x, beans[i].pos.y, scale-1);
+                    Bean beanR = Bean(beans[i].pos.x, beans[i].pos.y, scale-1, &texture);
                     beanR.rotationSpeed = beans[i].rotationSpeed*3.0f;
                     beanR.velocity = (Vector2){ 0.1f*RandomRange(10, 100), beans[i].velocity.y };
                     beans.push_back(beanR); //Sometimes this causes exception, idk why, pls help

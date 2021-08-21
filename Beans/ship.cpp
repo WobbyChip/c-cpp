@@ -9,6 +9,7 @@ class Ship {
         Texture2D texture_invincible;
         Vector2 pos;
         Vector2 velocity;
+        Rectangle rect;
         float scale;
         float rotation;
         float speed;
@@ -22,6 +23,7 @@ class Ship {
             texture_turbo = LoadTexture("resources/ship_turbo.png");
             texture_invincible = LoadTexture("resources/ship_invincible.png");
             pos = (Vector2){ (float)GetScreenWidth()/2, (float)GetScreenHeight()/2 };
+            rect = { pos.x-texture.width/2, pos.y-texture.height/2, (float)texture.width, (float)texture.height };
             invincibleTime = GetTime();
             scale = 1.1f;
             rotation = 0.0f;
@@ -52,6 +54,8 @@ class Ship {
             if (pos.x < 0) pos.x = 0;
             if (pos.y > GetScreenHeight()) pos.y = GetScreenHeight();
             if (pos.y < 0) pos.y = 0;
+
+            rect = { pos.x-texture.width/2, pos.y-texture.height/2, (float)texture.width, (float)texture.height };
         }
 
         void Draw()

@@ -7,6 +7,7 @@ using std::vector;
 class Bullet {
     public:
         Vector2 pos;
+        Rectangle rect;
         float speedY;
         float damage;
 
@@ -53,6 +54,7 @@ class Bullets {
             for (int i = 0; i < (int)bullets.size(); i++)
             {
                 bullets[i].pos.y -= bullets[i].speedY;
+                bullets[i].rect = { bullets[i].pos.x-texture.width/2, bullets[i].pos.y-texture.height/2, (float)texture.width, (float)texture.height };
                 if (bullets[i].pos.y < 0) { bullets.erase(bullets.begin() + i); }
             }
         }

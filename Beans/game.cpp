@@ -33,32 +33,20 @@ class Game {
             music = LoadMusicStream("resources/music.mp3");
         }
 
-        void CheckBulletsCollide()
+        void CheckcCllision()
         {
-            for (int i = 0; i < (int)bullets.bullets.size(); i++) {
-                for (int j = 0; j < (int)beans.beans.size(); j++) {
-                    float radius = beans.texture.width*beans.beans[j].scale/2;
-                    Vector2 bulletPos = (Vector2){ bullets.bullets[i].pos.x-bullets.texture.width/2, bullets.bullets[i].pos.y-bullets.texture.height/2 };
-                    Rectangle rec = { bulletPos.x, bulletPos.y, (float)bullets.texture.width, (float)bullets.texture.height };
-
-                    //Vector2 beansPos = beans.beans[j].pos;
-                    //DrawCircleLines(beansPos.x, beansPos.y, radius, RED);
-                    //DrawRectangleLinesEx(rec, 1, MAGENTA);
+            for (int i = 0; i < (int)beans.beans.size(); i++) {
+                for (int j = 0; j < (int)bullets.bullets.size(); j++) {
+                    //DrawCircleLines(beans.beans[j].pos.x, beans.beans[j].pos.y, beans.beans[j].radius, RED);
+                    //DrawRectangleLinesEx(bullets.bullets[i].rect, 1, MAGENTA);
                     
-                    if (CheckCollisionCircleRec(beans.beans[j].pos, radius, rec)) {
-                        score += beans.DamageBean(j, bullets.bullets[i].damage);
-                        bullets.DeleteBullet(i);
+                    if (beans.CollideRect(i, bullets.bullets[j].rect)) {
+                        score += beans.DamageBean(i, bullets.bullets[j].damage);
+                        bullets.DeleteBullet(j);
                     }
                 }
-            }
-        }
 
-        void CheckShipCollide()
-        {
-            Rectangle shipRec = { ship.pos.x-ship.texture.width/2, ship.pos.y-ship.texture.height/2, (float)ship.texture.width, (float)ship.texture.height };
-            for (int i = 0; i < (int)beans.beans.size(); i++) {
-                float radius = beans.texture.width*beans.beans[i].scale/2;
-                if (CheckCollisionCircleRec(beans.beans[i].pos, radius, shipRec)) {
+                if (beans.CollideRect(i, ship.rect)) {
                     if (ship.invincible) { return; }
                     ship.invincible = true;
                     ship.invincibleTime = GetTime()+SHIP_INVINC_TIME;
@@ -68,6 +56,7 @@ class Game {
                         scene = SceneMenu;
                         StopMusicStream(music);
                         PlaySound(end);
+                        break;
                     }
                 }
             }
@@ -106,11 +95,10 @@ class Game {
                     beans.SpawnBean();
                     stars.Move();
                     beans.Move();
-                    ship.Move();
                     bullets.Move();
+                    ship.Move();
 
-                    CheckBulletsCollide();
-                    CheckShipCollide();
+                    CheckcCllision();
                     break;
             }
         }
